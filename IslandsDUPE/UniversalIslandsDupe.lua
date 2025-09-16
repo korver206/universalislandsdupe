@@ -1958,5 +1958,36 @@ UserInputService.InputBegan:Connect(function(input)
 end)
 
 -- Initialize
-createUI()
-print("Universal Islands Permanent Duplicator loaded! Press 'D' to toggle UI. Features permanent item duplication via server substitution.")
+print("Loading Universal Islands Permanent Duplicator...")
+local success, err = pcall(function()
+    createUI()
+    print("UI created successfully!")
+end)
+
+if not success then
+    warn("Failed to create UI: " .. tostring(err))
+    -- Fallback: Create a simple notification
+    local notification = Instance.new("ScreenGui")
+    notification.Name = "ErrorNotification"
+    notification.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 300, 0, 100)
+    frame.Position = UDim2.new(0.5, -150, 0.5, -50)
+    frame.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+    frame.BorderSizePixel = 2
+    frame.Parent = notification
+
+    local text = Instance.new("TextLabel")
+    text.Size = UDim2.new(1, 0, 1, 0)
+    text.BackgroundTransparency = 1
+    text.Text = "UI Load Error: " .. tostring(err) .. "\nCheck F9 console for details."
+    text.TextColor3 = Color3.fromRGB(255, 255, 255)
+    text.TextScaled = true
+    text.Parent = frame
+
+    wait(5)
+    notification:Destroy()
+else
+    print("Universal Islands Permanent Duplicator loaded! Press 'D' to toggle UI. Features permanent item duplication via server substitution.")
+end
