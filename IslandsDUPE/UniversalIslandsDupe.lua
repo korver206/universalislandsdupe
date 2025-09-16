@@ -1,6 +1,6 @@
 -- Universal Roblox Islands Item Duplicator
 -- Permanent duplication using server item substitution
--- UI for easy input, toggle with 'D' key
+-- Ultra-simple UI with scrollbar
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -62,14 +62,14 @@ local function dupeItem(itemId, amount)
     return amount
 end
 
--- Create simple UI
+-- Create ultra-simple UI
 local function createUI()
     gui = Instance.new("ScreenGui")
     gui.Name = "UniversalIslandsDupe"
     gui.Parent = player:WaitForChild("PlayerGui")
 
     frame = Instance.new("Frame")
-    frame.Size = UDim2.new(0, 400, 0, 300)
+    frame.Size = UDim2.new(0, 400, 0, 500)
     frame.Position = UDim2.new(0, 10, 0, 10)
     frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     frame.BackgroundTransparency = 0.1
@@ -89,11 +89,22 @@ local function createUI()
     title.Font = Enum.Font.SourceSansBold
     title.Parent = frame
 
+    -- Item ID input
+    local itemIdLabel = Instance.new("TextLabel")
+    itemIdLabel.Size = UDim2.new(0.3, 0, 0, 25)
+    itemIdLabel.Position = UDim2.new(0.05, 0, 0, 35)
+    itemIdLabel.BackgroundTransparency = 1
+    itemIdLabel.Text = "Item ID:"
+    itemIdLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    itemIdLabel.Font = Enum.Font.SourceSans
+    itemIdLabel.TextScaled = true
+    itemIdLabel.Parent = frame
+
     local itemIdBox = Instance.new("TextBox")
-    itemIdBox.Size = UDim2.new(0.6, 0, 0, 30)
-    itemIdBox.Position = UDim2.new(0.05, 0, 0, 40)
+    itemIdBox.Size = UDim2.new(0.6, 0, 0, 25)
+    itemIdBox.Position = UDim2.new(0.35, 0, 0, 35)
     itemIdBox.Text = "1860"
-    itemIdBox.PlaceholderText = "Item ID (e.g. 1860 for Divine Dao)"
+    itemIdBox.PlaceholderText = "e.g. 1860"
     itemIdBox.TextColor3 = Color3.fromRGB(255, 255, 255)
     itemIdBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     itemIdBox.BorderSizePixel = 1
@@ -101,11 +112,22 @@ local function createUI()
     itemIdBox.TextScaled = true
     itemIdBox.Parent = frame
 
+    -- Amount input
+    local amountLabel = Instance.new("TextLabel")
+    amountLabel.Size = UDim2.new(0.3, 0, 0, 25)
+    amountLabel.Position = UDim2.new(0.05, 0, 0, 65)
+    amountLabel.BackgroundTransparency = 1
+    amountLabel.Text = "Amount:"
+    amountLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    amountLabel.Font = Enum.Font.SourceSans
+    amountLabel.TextScaled = true
+    amountLabel.Parent = frame
+
     local amountBox = Instance.new("TextBox")
-    amountBox.Size = UDim2.new(0.3, 0, 0, 30)
-    amountBox.Position = UDim2.new(0.7, 0, 0, 40)
+    amountBox.Size = UDim2.new(0.6, 0, 0, 25)
+    amountBox.Position = UDim2.new(0.35, 0, 0, 65)
     amountBox.Text = "1"
-    amountBox.PlaceholderText = "Amount"
+    amountBox.PlaceholderText = "e.g. 100"
     amountBox.TextColor3 = Color3.fromRGB(255, 255, 255)
     amountBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     amountBox.BorderSizePixel = 1
@@ -113,9 +135,10 @@ local function createUI()
     amountBox.TextScaled = true
     amountBox.Parent = frame
 
+    -- Duplicate button
     local dupeBtn = Instance.new("TextButton")
-    dupeBtn.Size = UDim2.new(0.9, 0, 0, 40)
-    dupeBtn.Position = UDim2.new(0.05, 0, 0, 80)
+    dupeBtn.Size = UDim2.new(0.9, 0, 0, 35)
+    dupeBtn.Position = UDim2.new(0.05, 0, 0, 95)
     dupeBtn.Text = "Duplicate Item (Permanent)"
     dupeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
     dupeBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
@@ -134,9 +157,10 @@ local function createUI()
         end
     end)
 
+    -- Fixed dupe button
     local fixedBtn = Instance.new("TextButton")
-    fixedBtn.Size = UDim2.new(0.9, 0, 0, 40)
-    fixedBtn.Position = UDim2.new(0.05, 0, 0, 130)
+    fixedBtn.Size = UDim2.new(0.9, 0, 0, 35)
+    fixedBtn.Position = UDim2.new(0.05, 0, 0, 135)
     fixedBtn.Text = "Fixed Dupe (3 Items)"
     fixedBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
     fixedBtn.BackgroundColor3 = Color3.fromRGB(0, 100, 200)
@@ -155,25 +179,53 @@ local function createUI()
         end
     end)
 
-    local console = Instance.new("TextLabel")
-    console.Size = UDim2.new(0.9, 0, 0, 100)
-    console.Position = UDim2.new(0.05, 0, 0, 180)
+    -- Console with scrollbar
+    local console = Instance.new("ScrollingFrame")
+    console.Size = UDim2.new(0.9, 0, 0, 300)
+    console.Position = UDim2.new(0.05, 0, 0, 175)
     console.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     console.BorderSizePixel = 1
     console.BorderColor3 = Color3.fromRGB(0, 255, 0)
-    console.Text = "Console: Ready\nUse item ID 1860 (Divine Dao) to test permanent duplication\nCheck backpack after duplication"
-    console.TextColor3 = Color3.fromRGB(0, 255, 0)
-    console.TextSize = 12
-    console.TextWrapped = true
-    console.TextYAlignment = Enum.TextYAlignment.Top
-    console.Font = Enum.Font.Code
+    console.ScrollBarThickness = 8
     console.Parent = frame
 
-    -- Override print to show in console
+    local consoleLayout = Instance.new("UIListLayout")
+    consoleLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    consoleLayout.Parent = console
+
+    local consoleTitle = Instance.new("TextLabel")
+    consoleTitle.Size = UDim2.new(1, -10, 0, 25)
+    consoleTitle.BackgroundTransparency = 1
+    consoleTitle.Text = "Console Output:"
+    consoleTitle.TextColor3 = Color3.fromRGB(0, 255, 0)
+    consoleTitle.Font = Enum.Font.SourceSansBold
+    consoleTitle.TextScaled = true
+    consoleTitle.Parent = console
+
+    local consoleText = Instance.new("TextLabel")
+    consoleText.Size = UDim2.new(1, -10, 0, 50)
+    consoleText.BackgroundTransparency = 1
+    consoleText.Text = "Ready to duplicate!\nUse item ID 1860 (Divine Dao) to test permanent duplication\nCheck backpack after duplication"
+    consoleText.TextColor3 = Color3.fromRGB(0, 255, 0)
+    consoleText.TextSize = 12
+    consoleText.TextWrapped = true
+    consoleText.Font = Enum.Font.Code
+    consoleText.Parent = console
+
+    -- Override print to add to console
     local oldPrint = print
     print = function(...)
         local msg = table.concat({...}, " ")
-        console.Text = console.Text .. "\n" .. msg
+        local newLabel = Instance.new("TextLabel")
+        newLabel.Size = UDim2.new(1, -10, 0, 20)
+        newLabel.BackgroundTransparency = 1
+        newLabel.Text = msg
+        newLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+        newLabel.Font = Enum.Font.Code
+        newLabel.TextSize = 12
+        newLabel.TextWrapped = true
+        newLabel.Parent = console
+        console.CanvasSize = UDim2.new(0, 0, 0, consoleLayout.AbsoluteContentSize.Y)
         oldPrint(...)
     end
 end
